@@ -3,7 +3,7 @@ MAINTAINER Ahmad_Sabateen
 
 EXPOSE 80
 
-COPY target/AtyponDatabase-1.0-SNAPSHOT.jar /home/AtyponDatabase-1.0-SNAPSHOT.jar
+COPY target/AtyponDatabase-1.0-SNAPSHOT-jar-with-dependencies.jar /home/AtyponDatabase-1.0-SNAPSHOT.jar
 
 CMD ["java","-jar","/home/AtyponDatabase-1.0-SNAPSHOT.jar server.Server"]
 
