@@ -33,18 +33,17 @@ public class test implements Runnable {
             Query query= new Query();
             query.filter=new Filter();
             query.input = new Input();
-            query.input.fields.put("name","World Navigation");
-            query.input.fields.put("description","Navigation Book");
-            query.input.fields.put("fileName","World_Navigation_Game_Code_Report.pdf");
-            query.input.fields.put("authorId",1);
-            query.input.fields.put("categeryId",1);
+            query.input.fields.put("username","ahmad");
+            query.input.fields.put("password","1234");
+            query.input.fields.put("role","admin");
 
 
 
             query.type="create";
-            query.Table="books";
+            query.Table="users";
             String request=objectMapper.writeValueAsString(query);
-            out.println(request);
+            out.println("{\"type\":\"create\",\"Table\":\"users\",\"filter\":{\"fields\":{}},\"input\":{\"fields\":{\"password\":\"1235\",\"role\":\"admin\",\"username\":\"ahmad\"}},\"table\":\"users\"}");
+            System.out.println(request);
             System.out.println(Thread.currentThread().getId()+in.readLine());
             socket.close();
         } catch (IOException e) {
