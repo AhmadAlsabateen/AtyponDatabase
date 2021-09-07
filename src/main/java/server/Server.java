@@ -12,16 +12,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Server {
     public static ServerSocket serverSocket = null;
 
     public static void main(String[] args) {
+
+        addRootAdmin();
         try {
             serverSocket = new ServerSocket(80);
-
             while (true) {
                 Socket client = serverSocket.accept();
                 System.out.println("New client connected" + client.getInetAddress().getHostAddress());
@@ -32,12 +31,24 @@ public class Server {
             e.printStackTrace();
         }
 
-        try {
-            addRootAdmin();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    }
 
+    private static void addRootAdmin() {
+
+        Thread th = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                    addRootAdminP();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        th.start();
     }
 
     private static boolean adminExist() throws IOException {
@@ -60,9 +71,9 @@ public class Server {
             User[] responseList = objectMapper.readValue(response, User[].class);
             socket.close();
 
-            if(responseList.length == 0) {
+            if (responseList.length == 0) {
                 return false;
-            } else{
+            } else {
                 return true;
             }
         } catch (IOException e) {
@@ -71,7 +82,8 @@ public class Server {
 
     }
 
-    private static void addRootAdmin() throws IOException {
+
+    private static void addRootAdminP() throws IOException {
         if (adminExist()) {
             return;
         }
