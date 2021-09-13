@@ -14,17 +14,19 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class FileAccessService<T extends Serializable> {
     private ReentrantReadWriteLock lock;
     private int recordSize;
-    String fileName;
+    private RandomAccessFile file ;
+
 
      FileAccessService(String fileName, int recordSize) throws FileNotFoundException {
-         this.fileName = fileName;
-        lock = new ReentrantReadWriteLock();
-        this.recordSize = recordSize;
+         file = new RandomAccessFile(fileName, "rw");
+         lock = new ReentrantReadWriteLock();
+         this.recordSize = recordSize;
     }
+
+
 
     public void create(Input input,T record) throws IOException, NoSuchFieldException, IllegalAccessException {
          lock.writeLock().lock();
-        RandomAccessFile file = new RandomAccessFile(fileName, "rw");
 
         long id = getNumOfRecords()+1;
         Field field = record.getClass().getDeclaredField("id");
@@ -45,8 +47,8 @@ public class FileAccessService<T extends Serializable> {
     public List<T> get(Filter filter) throws IOException, ClassNotFoundException, InterruptedException {
 
         lock.readLock().lock();
+        file.seek(0);
 
-        RandomAccessFile file = new RandomAccessFile(fileName, "rw");
         List<T> result = new ArrayList<>();
         file.seek(0);
 
@@ -70,7 +72,6 @@ public class FileAccessService<T extends Serializable> {
 
     public void update(Input input, Filter filter) throws IOException, ClassNotFoundException, NoSuchFieldException {
         lock.writeLock().lock();
-        RandomAccessFile file = new RandomAccessFile(fileName, "rw");
         file.seek(0);
         for (int i = 0; i < file.length() / recordSize; i++) {
             byte[] data = new byte[recordSize];
@@ -103,7 +104,6 @@ public class FileAccessService<T extends Serializable> {
 
     public void delete(Filter filter) throws IOException, ClassNotFoundException {
         lock.writeLock().lock();
-        RandomAccessFile file = new RandomAccessFile(fileName, "rw");
         file.seek(0);
         for (int i = 0; i < file.length() / recordSize; i++) {
             byte[] data = new byte[recordSize];
@@ -137,8 +137,6 @@ public class FileAccessService<T extends Serializable> {
                     try {
                         Field field = record.getClass().getDeclaredField(key);
                         String recordVlaue = field.get(record).toString();
-                        System.out.println(key);
-                        System.out.println(filter.fields.get(key).toString());
                         if (!recordVlaue.equalsIgnoreCase(filter.fields.get(key).toString())){
 
                             System.out.println("not apll");
@@ -151,7 +149,6 @@ public class FileAccessService<T extends Serializable> {
         return true;
     }
     public long getNumOfRecords() throws IOException {
-        RandomAccessFile file = new RandomAccessFile(fileName, "rw");
          return file.length()/recordSize;
     }
 

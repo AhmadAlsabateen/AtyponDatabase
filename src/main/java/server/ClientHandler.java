@@ -18,6 +18,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader in;
 
     private ClientHandler(Socket clientSocket) {
+        System.out.println("working");
         this.clientSocket = clientSocket;
         try {
              out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -34,7 +35,7 @@ public class ClientHandler implements Runnable {
         try {
             String request=in.readLine();
             Query query=objectMapper.readValue(request, Query.class);
-            CRUDFactory crudFactory=new CRUDFactory();
+            CRUDFactory crudFactory = new CRUDFactory();
             CrudOperation operation = crudFactory.getInstance(query);
             ArrayList list= (ArrayList) operation.perform();
             if (list != null){
@@ -43,16 +44,13 @@ public class ClientHandler implements Runnable {
             }
             clientSocket.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (IOException | NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
     public static Thread getInstance(Socket client){
+
         return new Thread(new ClientHandler(client));
     }
 

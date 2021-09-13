@@ -14,9 +14,7 @@ public class CRUDFactory implements AbstractFactory<CrudOperation, Query> {
                 case "create":
                     return new Create(query);
                 case "update":
-                    System.out.println("factory crud");
                     return new Update(query);
-
                 case "retrieve":
                     return new Retrieve(query);
                 case "delete":

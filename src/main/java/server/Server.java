@@ -79,9 +79,7 @@ public class Server {
         } catch (IOException e) {
             throw e;
         }
-
     }
-
 
     private static void addRootAdminP() throws IOException {
         if (adminExist()) {
@@ -111,7 +109,6 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

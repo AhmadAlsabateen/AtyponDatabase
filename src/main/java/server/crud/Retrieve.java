@@ -28,6 +28,4 @@ public class Retrieve implements CrudOperation<List>  {
         } catch (IOException | ClassNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
-        return result;
-    }
-}
+        return result; }}
